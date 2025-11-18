@@ -1,0 +1,29 @@
+name: Checkov Security Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  checkov:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Checkov
+        run: pip install checkov
+
+      - name: Run Checkov with custom policies
+        run: |
+          checkov -d . \
+            --external-checks-dir ./custom-policies \
+            --compact \
+            --quiet
